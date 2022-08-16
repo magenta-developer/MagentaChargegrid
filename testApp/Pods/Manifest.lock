@@ -1,0 +1,21 @@
+PODS:
+  - MagentaChargegrid (1.0.0)
+
+DEPENDENCIES:
+  - MagentaChargegrid (from `https://github.com/magenta-developer/MagentaChargegrid`)
+
+EXTERNAL SOURCES:
+  MagentaChargegrid:
+    :git: https://github.com/magenta-developer/MagentaChargegrid
+
+CHECKOUT OPTIONS:
+  MagentaChargegrid:
+    :commit: 93d4dc19d9b54a40771b0a741ff2b5f6710af86d
+    :git: https://github.com/magenta-developer/MagentaChargegrid
+
+SPEC CHECKSUMS:
+  MagentaChargegrid: 9691c7f71f4fff2341db0de85f16ec29d438ee2c
+
+PODFILE CHECKSUM: 5264929f49ccec05aa3f3f27bc4881c00c420bfa
+
+COCOAPODS: 1.11.3

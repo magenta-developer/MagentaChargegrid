@@ -1,0 +1,6 @@
+framework module MagentaChargegrid {
+  umbrella header "MagentaChargegrid-umbrella.h"
+
+  export *
+  module * { export * }
+}
