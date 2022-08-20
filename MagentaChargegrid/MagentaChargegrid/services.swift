@@ -7,7 +7,7 @@
 
 import Foundation
 
-var DEVELOPMENT_BASE_URL = "http://stage.magentachargegrid.com"
+var DEVELOPMENT_BASE_URL = ""
 
 let GET_ACCESSTOKEN_API = "/cm/api/v1/driver/guestuser"
 
@@ -59,7 +59,7 @@ public class services {
 
         public static func webservicesAPICalltoGetAccessToken(baseURL:String){
 
-           // DEVELOPMENT_BASE_URL = baseURL
+            DEVELOPMENT_BASE_URL = baseURL
 
             let Url = String(format: "\(DEVELOPMENT_BASE_URL + GET_ACCESSTOKEN_API)")
 
