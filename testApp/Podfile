@@ -8,7 +8,7 @@ target 'testApp' do
   # Pods for testApp
 
 #pod 'ChargeGridSDK'
-#pod 'MagentaChargegrid'
+
 pod 'MagentaChargegrid', :git => 'https://github.com/magenta-developer/MagentaChargegrid'
 
 

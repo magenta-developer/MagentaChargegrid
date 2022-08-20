@@ -8,6 +8,8 @@
 import UIKit
 import MagentaChargegrid
 class ViewController: UIViewController {
+    
+    @IBOutlet weak var sourceTxtF: UITextField!
     @IBOutlet weak var baseUrlTxtF: UITextField!
     @IBOutlet weak var stationIDTxtF: UITextField!
     @IBOutlet weak var MobilextF: UITextField!
@@ -55,9 +57,9 @@ class ViewController: UIViewController {
         stopRespnseLbl.text = ""
         RecieptRespnseLbl.text = ""
         
-        
-        
         baseUrlTxtF.text = "http://stage.magentachargegrid.com"
+        sourceTxtF.text = "HpPay"
+       
         setupToHideKeyboardOnTapOnView()
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotificationToken(notification:)), name: Notification.Name("NotificationIdentifier"), object: nil)
@@ -75,19 +77,6 @@ class ViewController: UIViewController {
                 tokeRespnseLbl.text = responseData
             case 101 :
                 chargerListRespnseLbl.text = responseData
-//                    let data2 = responseData.data(using: <#String.Encoding#>)
-//                if let data = responseData{
-//                    do {
-//                let someDictionaryFromJSON = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [[String: Any]]
-//                let ListData =  someDictionaryFromJSON[0]
-//                print(someDictionaryFromJSON)
-//                location  = ListData["id"] as! String
-//
-//                      } catch {
-//                          print(error)
-//
-//                      }
-//                  }
                 stationIDTxtF.text = location
             case 102 :
                 stationDetailsRespnseLbl.text = responseData
@@ -161,7 +150,7 @@ class ViewController: UIViewController {
     }
     @IBAction func GetTokenAction(_ sender: Any) {
         selectedButtonTag  = (sender as AnyObject).tag
-        services.webservicesAPICalltoGetAccessToken(baseURL: baseUrlTxtF.text! )
+        services.webservicesAPICalltoGetAccessToken(baseURL: baseUrlTxtF.text!,source: sourceTxtF.text! )
         
         
         
