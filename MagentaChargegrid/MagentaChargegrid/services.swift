@@ -11,7 +11,7 @@ var DEVELOPMENT_BASE_URL = ""
 
 let GET_ACCESSTOKEN_API = "/cm/api/v1/driver/guestuser"
 
-let CHARGERLIST_API = "/am/api/v1/getlocations?source=HpPay"
+let CHARGERLIST_API = "/am/api/v1/getlocations"
 
 let GET_STATIONDETAILS_API =  "/sm/secure/api/v1/getstationbyname"
 
@@ -23,13 +23,16 @@ let REQUEST_CHARGING_STOP_API = "/sm/secure/api/v1/remote/stop"
 
 let GENERATE_RECEIPT_API = "/tm/secure/api/v1/charging/receipt"
 
-var Token_ID = "basic eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb3VyY2UiOiJIcFBheSIsImV4cCI6MTY1OTUyNzUwNiwiaWF0IjoxNjU5MDk1NTA2LCJpc3MiOiJ3d3cubWFnZW50YWluZm9tYXRpY3MuY29tIn0._mMP3DuHwg8tCvBA6zcZgh8xj89rKIXpmrt43BGE0mo"
+var Token_ID = ""
 
 var charger_Id = ""
 
 var location = ""
 
-var mobileNo = 7503482233
+
+var mobileNo = 0
+var sourceType = ""
+
 
 var chargebox_id =  ""
 
@@ -51,15 +54,17 @@ var transactionid = 0
 
 var responseData = ""
 
+
 public class services {
 
    
 
      
 
-        public static func webservicesAPICalltoGetAccessToken(baseURL:String){
+    public static func webservicesAPICalltoGetAccessToken(baseURL:String,source:String){
 
             DEVELOPMENT_BASE_URL = baseURL
+        sourceType = source
 
             let Url = String(format: "\(DEVELOPMENT_BASE_URL + GET_ACCESSTOKEN_API)")
 
@@ -67,7 +72,7 @@ public class services {
 
            let parameter: [String: Any] = [
 
-                   "source" : "HpPay"
+                   "source" : source
 
            ]
 
@@ -104,6 +109,7 @@ public class services {
                     print(response)
 
                     print("The response is : ",String(data: data!, encoding: .utf8)!)
+                   
 
                     responseData = String(data: data!, encoding: .utf8)!
 
@@ -158,32 +164,26 @@ public class services {
         public static func webservicesAPICalltoChargerList() {
 
           
+         
 
-            let task = URLSession.shared.dataTask(with: URL(string: "\(DEVELOPMENT_BASE_URL + CHARGERLIST_API)")!) { [self](data, response, error) in
+            let task = URLSession.shared.dataTask(with: URL(string: "\(DEVELOPMENT_BASE_URL + CHARGERLIST_API)?source=\(sourceType)")!) { [self](data, response, error) in
 
                 responseData = String(data: data!, encoding: .utf8)!
 
                 setDataToUser(responseData:responseData)
-
-              
-
-                
-
                 if let data = data {
 
                     do {
 
-                        
-
                         let someDictionaryFromJSON = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [[String: Any]]
-
+                        if  someDictionaryFromJSON.count>0{
                         let ListData =  someDictionaryFromJSON[0]
 
                         print(someDictionaryFromJSON)
 
                         location  = ListData["id"] as! String
 
-                      
+                        }
 
                         
 
@@ -197,31 +197,16 @@ public class services {
 
                 }
 
-                
-
-            
-
             }
 
             task.resume()
 
-         
+       
 
         }
 
-        
-
-        
-
-        
-
-        
 
         public static func webservicesAPICalltoStationDetails(location:String) {
-
-            
-
-            
 
             let Url = String(format: "\(DEVELOPMENT_BASE_URL + GET_STATIONDETAILS_API)")
 
@@ -229,17 +214,11 @@ public class services {
 
             let header = [
 
-                
-
-                
 
                 "Authorization": Token_ID,
 
                 "Content-Type": "application/json"
 
-                
-
-                
 
             ]
 
@@ -299,13 +278,7 @@ public class services {
 
                         let chargers = someDictionaryFromJSON["chargers"] as! [[String:Any]]
 
-                        
-
-                      
-
-            
-
-                        
+                       
 
                         let connectorsData = chargers[0]["connectors"] as! [[String:Any]]
 
@@ -321,17 +294,10 @@ public class services {
 
                      
 
-                        enterprise = connectorsData[0]["enterprise"] as! String//""
-
-                        
+                        enterprise = connectorsData[0]["enterprise"] as! String
 
                         createdby = connectorsData[0]["createdby"] as! String//"623d665d26a410fd0536ebf4"
 
-                        
-
-                       
-
-                      
 
                     } catch {
 
@@ -356,7 +322,7 @@ public class services {
         
 
         public static func webservicesAPICalltoStartChargingRequest(
-
+          
                         mobile:Int,
 
                         chargeboxid:String,
@@ -423,7 +389,8 @@ public class services {
 
                     "createdby": createdby,
 
-                    "chargingamount":chargingamount
+                    "chargingamount":chargingamount,
+                    "source":sourceType
 
             ]
 
@@ -548,6 +515,7 @@ public class services {
                     "chargingamount": charging_amount,
 
                     "planid": plan_id,
+                    "source":sourceType
 
                   
 
@@ -657,7 +625,8 @@ public class services {
 
                     "connectortype" : connector_type,
 
-                    "connectorno" : connector_no
+                    "connectorno" : connector_no,
+                    "source":sourceType
 
                     
 
@@ -713,12 +682,6 @@ public class services {
 
         public static func webservicesAPICalltoGenerateReceipt() {
 
-           
-
-            
-
-            
-
             let Url = String(format: "\(DEVELOPMENT_BASE_URL + GENERATE_RECEIPT_API)")
 
             guard let serviceUrl = URL(string: Url) else { return }
@@ -727,23 +690,14 @@ public class services {
 
             let header = [
 
-                
-
-                
-
                 "Authorization": Token_ID,
 
                 "Content-Type": "application/json"
 
-                
-
-                
-
+           
             ]
 
-            
-
-            
+       
 
             let parameters: [String: Any] = [
 
